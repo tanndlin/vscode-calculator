@@ -11,10 +11,12 @@ function iterateSelections(
     callback: (input: string) => string
 ): void {
     const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
+
     const document = editor.document;
     const selections = editor.selections;
 
-    vscode.window.activeTextEditor.edit((edit) => {
+    editor.edit((edit) => {
         for (const selection of selections) {
             if (selection.isEmpty && !all) continue;
 
@@ -53,13 +55,13 @@ function countSelections(): void {
 
 function onSelection(): void {
     const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
 
-    if (editor.selections.length != 1 || editor.selection.isEmpty) return;
+    if (editor.selections.length !== 1 || editor.selection.isEmpty) return;
 
     try {
-        widget.text =
-            '= ' +
-            math.eval(editor.document.getText(editor.selection)).toString();
+        const selectedText = editor.document.getText(editor.selection);
+        widget.text = `= ${math.eval(selectedText)}`;
         widget.show();
     } catch (ex) {}
 }

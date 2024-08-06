@@ -6,7 +6,7 @@
     "publisher": "tanndlin",
     "icon": "images/logo.png",
     "engines": {
-        "vscode": "^1.0.0"
+        "vscode": "^1.92.0"
     },
     "author": {
         "name": "Tanndlin",
@@ -85,7 +85,10 @@
         "package": "npm run esbuild && vsce package"
     },
     "devDependencies": {
-        "typescript": "^1.8.5",
+        "@types/mathjs": "^9.4.2",
+        "@types/node": "^22.1.0",
+        "@types/vscode": "^1.92.0",
+        "typescript": "^5.5.4",
         "vscode": "^1.1.37"
     },
     "dependencies": {

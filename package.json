@@ -3,22 +3,22 @@
     "displayName": "Calculator",
     "description": "Calculation commands and tools for VS Code.",
     "version": "0.1.1",
-    "publisher": "lixquid",
+    "publisher": "tanndlin",
     "icon": "images/logo.png",
     "engines": {
         "vscode": "^1.0.0"
     },
     "author": {
-        "name": "Lixquid",
-        "url": "http://lixquid.com"
+        "name": "Tanndlin",
+        "url": "https://tanndlin.com"
     },
     "license": "GPL-3.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lixquid/vscode-calculator"
+        "url": "https://github.com/tanndlin/vscode-calculator"
     },
     "bugs": {
-        "url": "https://github.com/lixquid/vscode-calculator/issues"
+        "url": "https://github.com/tanndlin/vscode-calculator/issues"
     },
     "categories": [
         "Other"
@@ -52,36 +52,43 @@
             {
                 "command": "calculator.evaluate",
                 "title": "Evaluate",
-                "category": "Calculator"
+                "category": "calculator"
             },
             {
                 "command": "calculator.replace",
                 "title": "Replace",
-                "category": "Calculator"
+                "category": "calculator"
             },
             {
                 "command": "calculator.count",
                 "title": "Count",
-                "category": "Calculator"
+                "category": "calculator"
             },
             {
                 "command": "calculator.showInput",
                 "title": "Show Input Panel",
-                "category": "Calculator"
+                "category": "calculator"
             }
         ]
     },
     "scripts": {
-        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "vscode-test",
+        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+        "esbuild": "npm run esbuild-base -- --sourcemap",
+        "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+        "test-compile": "tsc -p ./",
+        "package": "npm run esbuild && vsce package"
     },
     "devDependencies": {
         "typescript": "^1.8.5",
-        "vscode": "^0.11.0"
+        "vscode": "^1.1.37"
     },
     "dependencies": {
-        "mathjs": "^3.4.1",
-        "copy-paste": "^1.3.0"
+        "mathjs": "^3.4.1"
     }
 }

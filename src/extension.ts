@@ -72,20 +72,13 @@ function onSelection(): void {
     } catch (ex) {}
 }
 
-// Exports /////////////////////////////////////////////////////////////////////
-
 export function activate(context: vscode.ExtensionContext) {
-    // Commands //
-
     const command = vscode.commands.registerCommand;
-
     context.subscriptions.push(
         command('calculator.evaluate', evaluateSelections),
         command('calculator.replace', replaceSelections),
         command('calculator.count', countSelections)
     );
-
-    // Widget //
 
     if (config.get('disable_widget', false)) {
         return;

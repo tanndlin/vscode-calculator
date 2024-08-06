@@ -6,7 +6,7 @@ let widget: vscode.StatusBarItem;
 
 function iterateSelections(
     all: boolean,
-    callback: (input: string) => string
+    callback: (input: string, index: number) => string
 ): void {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -19,10 +19,10 @@ function iterateSelections(
     editor.edit((edit) => {
         selections
             .filter((selection) => !selection.isEmpty || all)
-            .forEach((selection) => {
+            .forEach((selection, i) => {
                 try {
                     const text = document.getText(selection);
-                    const result = callback(text);
+                    const result = callback(text, i);
                     if (result === null) {
                         return;
                     }
@@ -48,10 +48,9 @@ function replaceSelections(): void {
 }
 
 function countSelections(): void {
-    let count = config.get('count_start', 0);
-    iterateSelections(true, (input) => {
-        count++;
-        return (count - 1).toString();
+    const offset = config.get('count_start', 0);
+    iterateSelections(true, (_, i) => {
+        return `${i + offset}`;
     });
 }
 

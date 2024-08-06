@@ -1,6 +1,4 @@
-'use strict';
-
-import * as math from 'mathjs';
+import Math from 'math-expression-evaluator';
 import * as vscode from 'vscode';
 
 const config = vscode.workspace.getConfiguration('calculator');
@@ -11,37 +9,41 @@ function iterateSelections(
     callback: (input: string) => string
 ): void {
     const editor = vscode.window.activeTextEditor;
-    if (!editor) return;
+    if (!editor) {
+        return;
+    }
 
     const document = editor.document;
     const selections = editor.selections;
 
     editor.edit((edit) => {
-        for (const selection of selections) {
-            if (selection.isEmpty && !all) continue;
+        selections
+            .filter((selection) => !selection.isEmpty || all)
+            .forEach((selection) => {
+                try {
+                    const text = document.getText(selection);
+                    const result = callback(text);
+                    if (result === null) {
+                        return;
+                    }
 
-            const text = document.getText(selection);
-
-            try {
-                const result = callback(text);
-                if (result == null) continue;
-                edit.replace(selection, result);
-            } catch (ex) {
-                console.error(ex);
-            }
-        }
+                    edit.replace(selection, result);
+                } catch (ex) {
+                    console.error(ex);
+                }
+            });
     });
 }
 
 function evaluateSelections(): void {
     iterateSelections(false, (input) => {
-        return `${input} = ${math.eval(input)}`;
+        return `${input} = ${Math.eval(input)}`;
     });
 }
 
 function replaceSelections(): void {
     iterateSelections(false, (input) => {
-        return math.eval(input).toString();
+        return Math.eval(input).toString();
     });
 }
 
@@ -55,13 +57,17 @@ function countSelections(): void {
 
 function onSelection(): void {
     const editor = vscode.window.activeTextEditor;
-    if (!editor) return;
+    if (!editor) {
+        return;
+    }
 
-    if (editor.selections.length !== 1 || editor.selection.isEmpty) return;
+    if (editor.selections.length !== 1 || editor.selection.isEmpty) {
+        return;
+    }
 
     try {
         const selectedText = editor.document.getText(editor.selection);
-        widget.text = `= ${math.eval(selectedText)}`;
+        widget.text = `= ${Math.eval(selectedText)}`;
         widget.show();
     } catch (ex) {}
 }
@@ -81,7 +87,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Widget //
 
-    if (config.get('disable_widget', false)) return;
+    if (config.get('disable_widget', false)) {
+        return;
+    }
 
     widget = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
     widget.command = 'calculator._hide_widget';

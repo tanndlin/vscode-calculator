@@ -5,6 +5,7 @@
     "version": "1.2.0",
     "publisher": "tanndlin",
     "icon": "images/logo.png",
+    "main": "./out/main.js",
     "engines": {
         "vscode": "^1.92.0"
     },

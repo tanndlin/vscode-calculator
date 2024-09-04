@@ -1,4 +1,4 @@
-import Math from 'math-expression-evaluator';
+import Mexp from 'math-expression-evaluator';
 import * as vscode from 'vscode';
 
 const config = vscode.workspace.getConfiguration('calculator');
@@ -37,13 +37,13 @@ function iterateSelections(
 
 function evaluateSelections(): void {
     iterateSelections(false, (input) => {
-        return `${input} = ${Math.eval(input)}`;
+        return `${input} = ${new Mexp().eval(input)}`;
     });
 }
 
 function replaceSelections(): void {
     iterateSelections(false, (input) => {
-        return Math.eval(input).toString();
+        return new Mexp().eval(input).toString();
     });
 }
 
@@ -66,7 +66,7 @@ function onSelection(): void {
 
     try {
         const selectedText = editor.document.getText(editor.selection);
-        widget.text = `= ${Math.eval(selectedText)}`;
+        widget.text = `= ${new Mexp().eval(selectedText)}`;
         widget.show();
     } catch (ex) {}
 }
@@ -82,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
     if (config.get('disable_widget', false)) {
         return;
     }
-
+    2 + 2;
     widget = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
     widget.command = 'calculator._hide_widget';
 
